@@ -1,0 +1,26 @@
+# Ignorar archivos de log
+*.log
+
+# Ignorar directorios de datos de Kafka
+kafka1/data/
+kafka2/data/
+kafka3/data/
+
+# Ignorar directorios de configuraciones temporales o de logs
+kafka1/logs/
+kafka2/logs/
+kafka3/logs/
+
+# Ignorar archivos generados por Docker
+*.db
+*.tar
+*.gz
+
+# Ignorar archivos generados por el contenedor
+docker-compose.override.yml
+.env
+*.swp
+
+# Ignorar archivos específicos de la máquina local
+.DS_Store
+Thumbs.db
