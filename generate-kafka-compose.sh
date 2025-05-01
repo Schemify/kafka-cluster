@@ -41,7 +41,6 @@ for i in $(seq 1 $NODES); do
   echo "      CLUSTER_ID: '$CLUSTER_ID'"
   echo "    networks:"
   echo "      - kafka-net"
-  echo "      - $NETWORK"
   echo ""
 done
 
