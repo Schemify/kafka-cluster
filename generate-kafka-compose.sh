@@ -1,15 +1,17 @@
 #!/bin/bash
 NODES=$1
 CLUSTER_ID="EmptNWtoR4GGWx-BH6nGLQ"
-NETWORK="kafka-net"
+NETWORK="schemify-nestjs_schemify-kafka-net"
 
-echo "version: '3.8'"
 echo "networks:"
 echo "  $NETWORK:"
+echo "    driver: external"
+echo "  kafka-net:"
 echo "    driver: bridge"
 echo ""
 echo "services:"
 
+# Generar nodos Kafka
 for i in $(seq 1 $NODES); do
   BROKER_PORT=$((9090 + $i * 2))
   CTRL_PORT=$((9091 + $i * 2))
@@ -38,6 +40,27 @@ for i in $(seq 1 $NODES); do
   echo "      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0"
   echo "      CLUSTER_ID: '$CLUSTER_ID'"
   echo "    networks:"
+  echo "      - kafka-net"
   echo "      - $NETWORK"
   echo ""
 done
+
+# Concatenar lista de bootstrap servers dinámicamente
+BOOTSTRAPSERVERS=$(seq -s, 1 $NODES | sed "s/\([0-9]\+\)/kafka\1:9092/g")
+
+# Agregar kafka-ui
+echo "  kafka-ui:"
+echo "    image: provectuslabs/kafka-ui:latest"
+echo "    container_name: kafka-cluster-ui"
+echo "    ports:"
+echo "      - \"8081:8080\""
+echo "    environment:"
+echo "      KAFKA_CLUSTERS_0_NAME: local"
+echo "      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: $BOOTSTRAPSERVERS"
+echo "    depends_on:"
+for i in $(seq 1 $NODES); do
+  echo "      - kafka$i"
+done
+echo "    networks:"
+echo "      - kafka-net"
+echo "      - $NETWORK"

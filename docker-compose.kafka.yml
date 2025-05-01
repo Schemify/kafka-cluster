@@ -1,5 +1,6 @@
-version: '3.8'
 networks:
+  schemify-nestjs_schemify-kafka-net:
+    driver: external
   kafka-net:
     driver: bridge
 
@@ -30,4 +31,18 @@ services:
       CLUSTER_ID: 'EmptNWtoR4GGWx-BH6nGLQ'
     networks:
       - kafka-net
+      - schemify-nestjs_schemify-kafka-net
 
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-cluster-ui
+    ports:
+      - "8081:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:9092
+    depends_on:
+      - kafka1
+    networks:
+      - kafka-net
+      - schemify-nestjs_schemify-kafka-net
