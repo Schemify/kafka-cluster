@@ -5,7 +5,7 @@ NETWORK="schemify-nestjs_schemify-kafka-net"
 
 echo "networks:"
 echo "  $NETWORK:"
-echo "    external: external"
+echo "    external: true"
 echo "  kafka-net:"
 echo "    driver: bridge"
 echo ""
